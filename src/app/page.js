@@ -47,6 +47,8 @@ export default function Scanner() {
         const videoDevices = devices.filter((device) => device.kind === "videoinput");
         setDevices(videoDevices);
 
+        console.log('Devices:', videoDevices);
+
         // If on a mobile device, use the back camera by default
         if (navigator.userAgent.includes("Mobile")) {
           setCurrentDevice(videoDevices[videoDevices.length - 1].deviceId);
@@ -66,6 +68,7 @@ export default function Scanner() {
   
     const startCamera = async () => {
       try {
+        console.log('Starting camera:', currentDevice);
         if (videoRef.current && videoRef.current.srcObject) {
           // Stop the existing stream
           videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
@@ -106,7 +109,7 @@ export default function Scanner() {
     const timer = setInterval(() => {
       if (videoRef.current && canvasRef.current) {
         const canvas = canvasRef.current;
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext("2d", { willReadFrequently: true });
         canvas.width = videoRef.current.videoWidth;
         canvas.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
@@ -154,10 +157,8 @@ export default function Scanner() {
   const switchCamera = () => {
     const currentIndex = devices.findIndex((device) => device.deviceId === currentDevice);
     const nextIndex = (currentIndex + 1) % devices.length;
-    console.log('Current camera:', devices[currentIndex].deviceId);
     console.log('Switching camera to:', devices[nextIndex].deviceId);
     setCurrentDevice(devices[nextIndex].deviceId)
-    console.log('Current device:', currentDevice);
   };
 
   return (
