@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-const Webcam = dynamic(() => import('react-webcam'), { ssr: false });
 import jsQR from 'jsqr';
 
 import { Button } from "@/components/ui/button";
