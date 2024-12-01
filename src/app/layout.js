@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner"
 
 import localFont from "next/font/local";
 import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,7 +15,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata = {
+const metadata = {
   title: "Fast QR",
   description: "Scan QR codes quickly and easily"
 };
@@ -22,11 +23,26 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <link rel="icon" href="/favicon.ico" />
+        <style>
+          {`
+            :root {
+              ${geistSans.css}
+              ${geistMono.css}
+            }
+          `}
+        </style>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <main>
-          {children}
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
         </main>
         <Toaster position="top-center" />
       </body>
