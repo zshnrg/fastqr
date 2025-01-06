@@ -46,16 +46,19 @@ export default function Scanner() {
   useEffect(() => {
     const getDevices = async () => {
       try {
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then(stream => console.log('Media stream:', stream))
-          .catch(error => console.error('Error accessing media devices:', error));
-
+        // Request access to video media
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log('Media stream:', stream);
+    
+        // Enumerate all media devices
         const devices = await navigator.mediaDevices.enumerateDevices();
-        console.log('All Available Devices:', devices)
+        console.log('All Available Devices:', devices);
+    
+        // Filter out video input devices
         const videoDevices = devices.filter((device) => device.kind === "videoinput");
+    
+        // Perform any action with the video devices (e.g., setting state)
         setDevices(videoDevices);
-
-        console.log('Devices:', videoDevices);
 
         if (videoDevices.length === 0) {
           console.error("No video devices found.");
