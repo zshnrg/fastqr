@@ -24,6 +24,7 @@ import {
 
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useRouter } from 'next/navigation';
 
 function isLink(text) {
   const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/\S*)?$/;
@@ -40,14 +41,26 @@ export default function Scanner() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
+  const router = useRouter()
+
   useEffect(() => {
     const getDevices = async () => {
       try {
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => console.log('Media stream:', stream))
+          .catch(error => console.error('Error accessing media devices:', error));
+
         const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log('All Available Devices:', devices)
         const videoDevices = devices.filter((device) => device.kind === "videoinput");
         setDevices(videoDevices);
 
         console.log('Devices:', videoDevices);
+
+        if (videoDevices.length === 0) {
+          console.error("No video devices found.");
+          router.push("/unavailable")
+        }
 
         // If on a mobile device, use the back camera by default
         if (navigator.userAgent.includes("Mobile")) {
